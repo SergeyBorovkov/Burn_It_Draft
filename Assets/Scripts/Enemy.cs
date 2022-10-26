@@ -30,9 +30,9 @@ public class Enemy : MonoBehaviour
     private Vector3 _forwardRotation = new Vector3(0, 360, 0);
     private Color _redRadar = Color.red;
     private Color _defaultRadarColor;
-    private int IdleHash = Animator.StringToHash("Idle");
-    private int WalkHash = Animator.StringToHash("Walk");
-    private int FireHash = Animator.StringToHash("Fire");
+    private int _idleHash = Animator.StringToHash("Idle");
+    private int _walkHash = Animator.StringToHash("Walk");
+    private int _fireHash = Animator.StringToHash("Fire");
     private bool _isPlayerDetected;
 
     private void Start()
@@ -71,7 +71,7 @@ public class Enemy : MonoBehaviour
     {
         _player = player;
 
-        Animate(FireHash);        
+        Animate(_fireHash);        
 
         _alarmCanvasGroup.alpha = 1;        
 
@@ -84,17 +84,17 @@ public class Enemy : MonoBehaviour
     {
         _movingPatrolSequence = DOTween.Sequence();
 
-        _movingPatrolSequence.AppendCallback(() => Animate(IdleHash));
+        _movingPatrolSequence.AppendCallback(() => Animate(_idleHash));
         _movingPatrolSequence.AppendInterval(_idlePause);
-        _movingPatrolSequence.AppendCallback(() => Animate(WalkHash));
+        _movingPatrolSequence.AppendCallback(() => Animate(_walkHash));
         _movingPatrolSequence.Append(transform.DOMoveZ(_endPoint.position.z, _walkDuration).SetEase(Ease.Linear));
         _movingPatrolSequence.Join(transform.DORotate(_firstRotation, _rotationDuration).SetEase(Ease.Linear));
-        _movingPatrolSequence.AppendCallback(() => Animate(IdleHash));
+        _movingPatrolSequence.AppendCallback(() => Animate(_idleHash));
         _movingPatrolSequence.AppendInterval(_idlePause);
-        _movingPatrolSequence.AppendCallback(() => Animate(WalkHash));
+        _movingPatrolSequence.AppendCallback(() => Animate(_walkHash));
         _movingPatrolSequence.Append(transform.DOMoveZ(_startPosition.z, _walkDuration).SetEase(Ease.Linear));
         _movingPatrolSequence.Join(transform.DORotate(_secondRotation, _rotationDuration).SetEase(Ease.Linear));
-        _movingPatrolSequence.AppendCallback(() => Animate(WalkHash));
+        _movingPatrolSequence.AppendCallback(() => Animate(_walkHash));
         _movingPatrolSequence.AppendCallback(() => AnimateMovingPatrol());        
     }
 
@@ -104,7 +104,7 @@ public class Enemy : MonoBehaviour
         {
             _standPatrolSequence = DOTween.Sequence();
 
-            _standPatrolSequence.AppendCallback(() => Animate(IdleHash));
+            _standPatrolSequence.AppendCallback(() => Animate(_idleHash));
             _standPatrolSequence.Join(transform.DORotate(_standPatrolRotation, _rotationDuration).SetEase(Ease.Linear));
             _standPatrolSequence.AppendInterval(_idlePause);
             _standPatrolSequence.Append(transform.DORotate(_startRotation, _rotationDuration).SetEase(Ease.Linear));
@@ -157,7 +157,7 @@ public class Enemy : MonoBehaviour
 
     private void ExitAlarmScenario()
     {
-        Animate(IdleHash);
+        Animate(_idleHash);
 
         _alarmCanvasGroup.alpha = 0;
 

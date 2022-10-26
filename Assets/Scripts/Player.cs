@@ -16,8 +16,6 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _rightCanister;
     [SerializeField] private Slider _healthbarSlider;
 
-    public bool IsFinish => _isFinish;
-
     private List<BurnableObject> _burners = new List<BurnableObject>();    
     private Sequence _jumpOver;
     private WaitForSeconds _jumpOverInterval;
@@ -36,17 +34,19 @@ public class Player : MonoBehaviour
     private float _finishWalkingLengthOnZ = 5f;
     private float _finishWalkingDuration = 5f;
     private float _healthbarCanvasDeactivationDelay = 1f;
-    private int RunHash = Animator.StringToHash("Run");
-    private int IdleHash = Animator.StringToHash("Idle");
-    private int JumpOverHash = Animator.StringToHash("JumpOver");
-    private int SplashHash = Animator.StringToHash("Splash");
-    private int WalkHash = Animator.StringToHash("Walk");
-    private int ThrowMatchHash = Animator.StringToHash("Throw");
-    private int TakeShotTriggerHash = Animator.StringToHash("TakeShot");
-    private int MirrorTakeShotBoolHash = Animator.StringToHash("MirrorTakeShot");
+    private int _runHash = Animator.StringToHash("Run");
+    private int _idleHash = Animator.StringToHash("Idle");
+    private int _jumpOverHash = Animator.StringToHash("JumpOver");
+    private int _splashHash = Animator.StringToHash("Splash");
+    private int _walkHash = Animator.StringToHash("Walk");
+    private int _throwMatchHash = Animator.StringToHash("Throw");
+    private int _takeShotTriggerHash = Animator.StringToHash("TakeShot");
+    private int _mirrorTakeShotBoolHash = Animator.StringToHash("MirrorTakeShot");
     private bool _isRunning;
     private bool _isSplashing;
     private bool _isFinish;
+
+    public bool IsFinish => _isFinish;
 
     private void Update()
     {
@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
         {
             _isSplashing = true;
 
-            Animate(SplashHash);
+            Animate(_splashHash);
             
             burner.DisableTriggerCollider();
 
@@ -84,9 +84,9 @@ public class Player : MonoBehaviour
             
             _joystickCanvasGroup.alpha = 0;
 
-            Animate(WalkHash);
+            Animate(_walkHash);
 
-            DOVirtual.DelayedCall(_throwMatchAnimationDelay, () => Animate(ThrowMatchHash));
+            DOVirtual.DelayedCall(_throwMatchAnimationDelay, () => Animate(_throwMatchHash));
 
             _rightCanister.SetActive(false);
 
@@ -115,11 +115,11 @@ public class Player : MonoBehaviour
         Vector3 localEnemyPosition = transform.InverseTransformPoint(enemyPosition);        
 
         if (localEnemyPosition.x > 0)
-            _animator.SetBool(MirrorTakeShotBoolHash, false);        
+            _animator.SetBool(_mirrorTakeShotBoolHash, false);        
         else
-            _animator.SetBool(MirrorTakeShotBoolHash, true);        
+            _animator.SetBool(_mirrorTakeShotBoolHash, true);        
 
-        _animator.SetTrigger(TakeShotTriggerHash);
+        _animator.SetTrigger(_takeShotTriggerHash);
     }
 
     public void StartJumpOver()
@@ -142,7 +142,7 @@ public class Player : MonoBehaviour
 
         _jumpOver = DOTween.Sequence();
 
-        Animate(JumpOverHash);
+        Animate(_jumpOverHash);
 
         foreach (var point in _jumpOverPoints)
         {
@@ -166,7 +166,7 @@ public class Player : MonoBehaviour
         {
             if (_isRunning == false)
             {
-                Animate(RunHash);
+                Animate(_runHash);
 
                 _isRunning = true;
             }
@@ -180,7 +180,7 @@ public class Player : MonoBehaviour
             {
                 _isRunning = false;
 
-                Animate(IdleHash);
+                Animate(_idleHash);
             }
         }
     }
